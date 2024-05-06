@@ -31,6 +31,38 @@ from crowdin_api.api_resources.reports.types import (
     BaseRates
 )
 
+class BaseReportArchivesResource(BaseResource):
+    def get_report_archives_path(
+        self, 
+        projectId: int, 
+        reportArchiveId: Optional[str] = None
+    ):
+        if reportArchiveId is not None:
+            return f"projects/{projectId}/reports/archives/{reportArchiveId}"
+
+        return f"projects/{projectId}/reports/archives"
+
+    def list_report_archives(
+        self,
+        scopeType: Optional[str] = None,
+        scopeId: Optional[int] = None,
+        limit: Optional[int] = None,
+        offset: Optional[int] = None
+    ):
+        """
+        List Report Archives.
+
+        Link to documentation:
+        https://developer.crowdin.com/api/v2/#operation/api.reports.archives.getMany
+        """
+
+        projectId = projectId or self.get_project_id()
+
+        return self._get_entire_data(
+            method="get",
+            path=self.get_report_archives_path(projectId=projectId),
+            params=self.get_page_params(scopeType=scopeType, scopeId=scopeId, limit=limit, offset=offset)
+        )
 
 class BaseReportsResource(BaseResource):
     def get_reports_path(self, projectId: int, reportId: Optional[str] = None):
