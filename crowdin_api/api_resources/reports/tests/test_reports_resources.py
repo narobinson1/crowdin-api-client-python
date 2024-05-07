@@ -72,6 +72,46 @@ class TestReportsResource:
     def test_present_methods(self, name_method):
         assert hasattr(self.resource_class, name_method)
 
+    @pytest.mark.parametrize(
+        "incoming_data, path",
+        (
+            ({"userId": 1}, "users/1/reports/archives")
+        )
+    )
+    def test_get_report_archives_path(self, incoming_data, path, base_absolut_url):
+        resource = self.get_resource(base_absolut_url)
+        assert resource.get_report_archives_path(**incoming_data) == path
+    
+    @pytest.mark.paramatrize(
+        "incoming_data, request_params",
+        (
+            {},
+            {
+                "scopeType": None,
+                "scopeId": None,
+                "limit": 25,
+                "offset": 0,
+            }
+        )
+    )
+    @mock.patch("crowdin_api.requester.APIRequester.request")
+    def test_list_report_archives(
+        self, 
+        m_request, 
+        incoming_data, 
+        request_params, 
+        base_absolut_url
+    ):
+        m_request.return_value = "response"
+
+        resource = self.get_resource(base_absolut_url)
+        assert resource.list_report_archives(**incoming_data) == "response"
+        m_request.assert_called_once_with(
+            method="get",
+            path=resource.get_report_archives_path(userId=1),
+            params=request_params,
+        )
+    
     @mock.patch("crowdin_api.requester.APIRequester.request")
     def test_generate_report(self, m_request, base_absolut_url):
         m_request.return_value = "response"
