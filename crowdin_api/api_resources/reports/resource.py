@@ -34,13 +34,13 @@ from crowdin_api.api_resources.reports.types import (
 class BaseReportArchivesResource(BaseResource):
     def get_report_archives_path(
         self, 
-        projectId: int, 
-        reportArchiveId: Optional[str] = None
+        userId: Optional[int] = None, 
+        archiveId: Optional[str] = None
     ):
-        if reportArchiveId is not None:
-            return f"projects/{projectId}/reports/archives/{reportArchiveId}"
+        if archiveId is not None:
+            return f"users/{userId}/reports/archives/{reportArchiveId}"
 
-        return f"projects/{projectId}/reports/archives"
+        return f"users/{userId}/reports/archives"
 
     def list_report_archives(
         self,
@@ -56,12 +56,12 @@ class BaseReportArchivesResource(BaseResource):
         https://developer.crowdin.com/api/v2/#operation/api.reports.archives.getMany
         """
 
-        projectId = projectId or self.get_project_id()
+        userId = self.get_authenticated_user()["id"]
 
         return self._get_entire_data(
             method="get",
-            path=self.get_report_archives_path(projectId=projectId),
-            params=self.get_page_params(scopeType=scopeType, scopeId=scopeId, limit=limit, offset=offset)
+            path=self.get_report_archives_path(userId=userId),
+            params={"scopeType": scopeType, "scopeId": scopeId, "limit": limit, "offset": offset}
         )
 
 class BaseReportsResource(BaseResource):
