@@ -44,6 +44,7 @@ class BaseReportArchivesResource(BaseResource):
 
     def list_report_archives(
         self,
+        userId: int,
         scopeType: Optional[str] = None,
         scopeId: Optional[int] = None,
         limit: Optional[int] = None,
@@ -54,9 +55,10 @@ class BaseReportArchivesResource(BaseResource):
 
         Link to documentation:
         https://developer.crowdin.com/api/v2/#operation/api.reports.archives.getMany
-        """
 
-        userId = self.get_authenticated_user()["id"]
+        Link to documentation for enterprise:
+        https://developer.crowdin.com/enterprise/api/v2/#operation/api.reports.archives.getMany
+        """
 
         return self._get_entire_data(
             method="get",
