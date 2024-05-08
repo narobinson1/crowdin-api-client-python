@@ -34,11 +34,11 @@ from crowdin_api.api_resources.reports.types import (
 class BaseReportArchivesResource(BaseResource):
     def get_report_archives_path(
         self, 
-        userId: Optional[int] = None, 
+        userId: int, 
         archiveId: Optional[str] = None
     ):
         if archiveId is not None:
-            return f"users/{userId}/reports/archives/{reportArchiveId}"
+            return f"users/{userId}/reports/archives/{archiveId}"
 
         return f"users/{userId}/reports/archives"
 
